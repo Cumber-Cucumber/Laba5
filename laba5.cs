@@ -21,8 +21,8 @@ namespace Laba5
         }
         interface IRectangle : IGeometric_Figure
         {
-            int Height { get; }
-            int Width { get; }
+            int Height { get; set; }
+            int Width { get; set; }
         }
         public interface IControl
         {
@@ -34,6 +34,7 @@ namespace Laba5
         public abstract class Control_Element : IControl
         {
             protected int size;
+
             public virtual void Show()
             {
                 Console.WriteLine("Если это сообщение видно, значит в дочернем классе не реализован метод Scow() или метод вызывается из базового (этого) класса");
@@ -48,7 +49,7 @@ namespace Laba5
             }
 
         }
-        public class Button : Control_Element
+        public partial class Button : Control_Element
         {
             public bool Clickable { get; set; }
 
@@ -83,8 +84,8 @@ namespace Laba5
         }
         public class Checkbox : Button, IRectangle, IControl
         {
-            public int Height { get; }
-            public int Width { get; }
+            public int Height { get; set; }
+            public int Width { get; set; }
             public string Color { get; }
 
             public Checkbox(int _height, int _width, string _color, bool __clicable) : base(__clicable)
@@ -97,6 +98,12 @@ namespace Laba5
             new public void Show()
             {
                 Console.WriteLine("Сведения о checkbox:");
+                Console.WriteLine($"Изменяемый параметр: {size}, цвет: {Color}, величины: {Width}x{Height}");
+            }
+
+            void IControl.Show()
+            {
+                Console.WriteLine("Этот метод переопределён от интерфеса. Сведения о checkbox:");
                 Console.WriteLine($"Изменяемый параметр: {size}, цвет: {Color}, величины: {Width}x{Height}");
             }
 
@@ -142,5 +149,142 @@ namespace Laba5
             }
         }
 
+        public partial class LB6
+        {
+
+        }
+
+
+
+
+
+
+
+
+        public class UI
+        {
+            public static Control_Element[] array;
+            public int count = 0;
+            public static int size;
+
+
+            public UI(int a)
+            {
+                size = a;
+                array = new Control_Element[a];
+            }
+
+            public bool Check_Full()
+            {
+                return (count == size);
+            }
+
+            public bool Check_Empty()
+            {
+                return (count == 0);
+            }
+
+            public void Add(Control_Element el)
+            {
+                if (Check_Full())
+                    return;
+                array[count++] = el;
+            }
+
+            public void Del(Control_Element el)
+            {
+                int num = 0;
+                if (Check_Empty())
+                    return;
+                for (int i = 0; i < count; i++)
+                {
+                    if (array[i].Equals(el))
+                        num = i;
+                }
+                for (int i = num; i < count; i++)
+                {
+                    array[i] = array[i + 1];
+                }
+                count--;
+            }
+
+            public void Show()
+            {
+                for (int i = 0; i < count; i++)
+                {
+                    Console.WriteLine(array[i].ToString());
+                }
+                Console.WriteLine();
+            }
+        }
+
+
+        public static class Controller
+        {
+
+
+            public static void Show(UI arr)
+            {
+                string[] elements = new string[10];
+                int[] count = new int[10];
+                int allcount = 0;
+                int position = 0;
+                bool mark = true;  
+
+                for (int j = 0; j < arr.count; j++)
+                {
+                    for (int i = 0; i < position; i++)
+                    {
+                        if (elements[i] == (UI.array[j].GetType()).Name)
+                        {
+                            mark = false;
+                            count[i]++;
+                            allcount++;
+                            break;
+                        }
+                    }
+                    if (mark)
+                    {
+                        elements[position] = UI.array[j].GetType().Name;
+                        count[position]++;
+                        allcount++;
+                        position++;
+                    }
+                    mark = true;
+                }
+
+                Console.WriteLine("Типы элементов массива объектов: ");
+                for (int i = 0; i < position; i++)
+                {
+                    Console.WriteLine($"{elements[i]} в количестве {count[i]}");
+                }
+                Console.WriteLine();
+                Console.WriteLine($"Общее количесвто объектов: {allcount}");
+                Console.WriteLine();
+
+            }
+
+            public static double Get_Area(UI arr)
+            {
+                double area = 0;
+                for (int j = 0; j < arr.count; j++)
+                {
+                    if (UI.array[j].GetType().Name == "Button")
+                        continue;
+                    if (UI.array[j].GetType().Name == "Radiobutton")
+                    {
+                        area += Math.Pow(((Radiobutton)UI.array[j]).Diameter / 2, 2) * Math.PI;
+                        continue;
+                    }
+                       
+                    if (UI.array[j].GetType().Name == "Checkbox")
+                    {
+                        area += ((Checkbox)UI.array[j]).Width * ((Checkbox)UI.array[j]).Height;
+                        continue;
+                    }
+                }
+                return area;
+            }
+        }
     }
 }
