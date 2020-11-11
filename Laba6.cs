@@ -9,7 +9,7 @@ namespace Laba5
     {
         public partial class LB6
         {
-            enum Enumeration // Перечисление
+            public enum Enumeration // Перечисление
             {
                 one = 1,
                 two,
@@ -19,10 +19,10 @@ namespace Laba5
                 seven
             }
 
-            struct Structure // Структура
+            public struct Structure // Структура
             {
-                int num;
-                string str;
+                public int num;
+                public string str;
             }
         }
     }

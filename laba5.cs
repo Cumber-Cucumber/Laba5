@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
+using static Laba5.laba7;
 
 namespace Laba5
 {
@@ -55,6 +56,10 @@ namespace Laba5
 
             public Button(bool _clicable)
             {
+                if (_clicable == false)
+                {
+                    throw new NotClickableButton("Создаваемые кнопки должны быть кликабельны! Этож кнопки, але"); // Искючение в конструкторе
+                }
                 Clickable = _clicable;
             }
             new public void Show()
@@ -90,6 +95,14 @@ namespace Laba5
 
             public Checkbox(int _height, int _width, string _color, bool __clicable) : base(__clicable)
             {
+                if (_height < 3 || _height > 400)
+                {
+                    throw new CheckboxHeightExemption("Высота чекбокса не может принимать данное значение!", _height); // Искючение в конструкторе
+                }
+                if (_width < 3 || _width > 400)
+                {
+                    throw new CheckboxWidthExemption("Ширина чекбокса не может принимать данное значение!", _width);
+                }
                 Height = _height;
                 Width = _width;
                 Color = _color;
@@ -116,7 +129,20 @@ namespace Laba5
         }
         public class Radiobutton : Button, ICircle, IControl
         {
-            public int Diameter { get; set; }
+            private int diam;
+            public int Diameter
+            {
+                get { return diam; }
+                set
+                {
+                    if (value < 4 || value > 400)
+                    {
+                        throw new RadiobuttonDiameterExemption("Диаметр радиобаттона не может принимать данное значение!", value); // Искючение в свойстве
+                    }
+                    else
+                        diam = value;
+                }
+            }
             public string Color { get; }
 
             public Radiobutton(int _diameter, string _color, bool __clicable) : base(__clicable)
@@ -259,7 +285,7 @@ namespace Laba5
                     Console.WriteLine($"{elements[i]} в количестве {count[i]}");
                 }
                 Console.WriteLine();
-                Console.WriteLine($"Общее количесвто объектов: {allcount}");
+                Console.WriteLine($"Общее количество объектов: {allcount}");
                 Console.WriteLine();
 
             }
